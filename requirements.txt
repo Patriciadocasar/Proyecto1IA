@@ -1,0 +1,9 @@
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.5
+tensorflow>=2.16
+streamlit>=1.50
+shap>=0.46
+plotly>=5.20
+matplotlib>=3.8
+joblib>=1.3
