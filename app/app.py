@@ -5,11 +5,11 @@ Ejecutar desde la raíz del proyecto:
     streamlit run app/app.py
 
 Vistas:
-  🔎 Buscador por cliente   -> puntaje de la red, impacto monetario y decisión
-  ➕ Cliente nuevo          -> mismo análisis para datos ingresados a mano
-  📊 Panel de cartera       -> balance en riesgo, inversión, dinero a rescatar
-  🎛️ Simulador             -> ajustar costos/efectividad y ver el impacto
-  🧠 Modelo                 -> métricas técnicas y explicabilidad (SHAP)
+   Buscador por cliente   -> puntaje de la red, impacto monetario y decisión
+   Cliente nuevo          -> mismo análisis para datos ingresados a mano
+   Panel de cartera       -> balance en riesgo, inversión, dinero a rescatar
+   Simulador             -> ajustar costos/efectividad y ver el impacto
+   Modelo                 -> métricas técnicas y explicabilidad (SHAP)
 """
 import json
 import sys
@@ -69,7 +69,7 @@ def sidebar_params() -> ParametrosFinancieros:
     st.sidebar.caption("Parámetros de negocio (simulador global)")
     p = ParametrosFinancieros()
 
-    with st.sidebar.expander("💵 Margen del cliente", expanded=False):
+    with st.sidebar.expander("Margen del cliente", expanded=False):
         p.spread_neto = st.slider("Spread neto sobre saldo (%)", 0.0, 5.0,
                                   p.spread_neto * 100, 0.1) / 100
         p.comision_por_producto = st.number_input(
@@ -81,7 +81,7 @@ def sidebar_params() -> ParametrosFinancieros:
         p.horizonte_anios = st.slider("Horizonte de valor (años)", 0.5, 5.0,
                                       p.horizonte_anios, 0.5)
 
-    with st.sidebar.expander("🎁 Catálogo de incentivos", expanded=True):
+    with st.sidebar.expander("Catálogo de incentivos", expanded=True):
         for key, a in p.catalogo.items():
             st.markdown(f"**{a.nombre}**  \n_niveles: {', '.join(a.niveles)}_")
             c1, c2 = st.columns(2)
@@ -90,7 +90,7 @@ def sidebar_params() -> ParametrosFinancieros:
             a.efectividad = c2.slider("Efectividad", 0.0, 1.0, a.efectividad,
                                       0.05, key=f"e_{key}")
 
-    with st.sidebar.expander("🏷️ Segmentación", expanded=False):
+    with st.sidebar.expander("Segmentación", expanded=False):
         p.umbral_patrimonial = st.number_input(
             "Saldo mínimo nivel Patrimonial ($)", 0.0, 500_000.0,
             p.umbral_patrimonial, 5_000.0)
@@ -143,7 +143,7 @@ def ficha_cliente(row_df: pd.DataFrame, prob: float, p: ParametrosFinancieros):
         m6.metric("Ganancia neta esperada", money(ev["ganancia_mejor_accion"]))
 
     # Tabla con TODAS las acciones evaluadas -> transparencia de la decisión
-    st.markdown("##### 🧮 Cálculo de la regla de retención para cada incentivo")
+    st.markdown("##### Cálculo de la regla de retención para cada incentivo")
     filas = []
     for a in p.catalogo.values():
         eleg = ev["nivel_patrimonial"] in a.niveles
@@ -159,7 +159,7 @@ def ficha_cliente(row_df: pd.DataFrame, prob: float, p: ParametrosFinancieros):
         hide_index=True, width="stretch")
 
     # Explicación SHAP del cliente
-    with st.expander("🧠 ¿Por qué la red da esta probabilidad? (SHAP)", expanded=True):
+    with st.expander("¿Por qué la red da esta probabilidad? (SHAP)", expanded=True):
         with st.spinner("Calculando contribuciones SHAP..."):
             shap_row = get_predictor().explain(row_df).iloc[0].sort_values()
         fig = px.bar(
@@ -177,7 +177,7 @@ def ficha_cliente(row_df: pd.DataFrame, prob: float, p: ParametrosFinancieros):
 # Vistas
 # ---------------------------------------------------------------------------
 def vista_buscador(df, p):
-    st.header("🔎 Buscador por cliente")
+    st.header("Buscador por cliente")
     c1, c2 = st.columns([1, 2])
     modo = c1.radio("Buscar por", ["ID de cliente", "Apellido"], horizontal=True)
     if modo == "ID de cliente":
@@ -194,14 +194,14 @@ def vista_buscador(df, p):
                            hits[config.ID_COL].tolist(),
                            format_func=lambda x: f"{x} – {hits.set_index(config.ID_COL).loc[x, 'Surname']}")
     row = df[df[config.ID_COL] == cid]
-    with st.expander("📄 Datos del cliente"):
+    with st.expander("Datos del cliente"):
         st.dataframe(row[config.FEATURES].T.rename(columns=lambda _: "valor").astype(str),
                      width="stretch")
     ficha_cliente(row[config.FEATURES + [config.ID_COL]], float(row["prob_fuga"].iloc[0]), p)
 
 
 def vista_nuevo(p):
-    st.header("➕ Evaluar un cliente nuevo")
+    st.header("Evaluar un cliente nuevo")
     st.caption("Ingresa los datos de un cliente que no está en la base para "
                "obtener su puntaje y la recomendación.")
     with st.form("nuevo"):
@@ -234,7 +234,7 @@ def vista_nuevo(p):
         ficha_cliente(row, prob, p)
 
     st.divider()
-    st.subheader("📥 Carga masiva (CSV)")
+    st.subheader("Carga masiva (CSV)")
     st.caption(f"Columnas requeridas: {', '.join(config.FEATURES)}")
     up = st.file_uploader("Sube un CSV con clientes nuevos", type="csv")
     if up is not None:
@@ -255,7 +255,7 @@ def vista_nuevo(p):
 
 
 def vista_panel(df, p):
-    st.header("📊 Panel de cartera")
+    st.header("Panel de cartera")
     ev = evaluar_cartera(df.drop(columns="prob_fuga"), df["prob_fuga"].to_numpy(), p)
 
     f1, f2, f3 = st.columns(3)
@@ -328,7 +328,7 @@ def vista_panel(df, p):
 
 
 def vista_simulador(df, p):
-    st.header("🎛️ Simulador de parámetros")
+    st.header("Simulador de parámetros")
     st.caption("Modifica costos y efectividades en la barra lateral. Aquí ves el "
                "efecto frente a los parámetros por defecto y frente a una estrategia "
                "ingenua (dar incentivo a todo cliente con prob ≥ 0.5).")
@@ -395,7 +395,7 @@ def vista_simulador(df, p):
 
 
 def vista_modelo():
-    st.header("🧠 Modelo de red neuronal")
+    st.header("Modelo de red neuronal")
     if not config.METRICS_PATH.exists():
         st.warning("Ejecuta `python -m src.train` para generar las métricas.")
         return
@@ -433,8 +433,8 @@ def main():
     except FileNotFoundError as exc:
         st.error(str(exc))
         st.stop()
-    tabs = st.tabs(["🔎 Buscador", "➕ Cliente nuevo", "📊 Panel de cartera",
-                    "🎛️ Simulador", "🧠 Modelo"])
+    tabs = st.tabs(["Buscador", "Cliente nuevo", "Panel de cartera",
+                    "Simulador", "Modelo"])
     with tabs[0]:
         vista_buscador(df, p)
     with tabs[1]:

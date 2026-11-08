@@ -1,8 +1,16 @@
+INTEGRANTES
+Patricia Docasar
+Andres Valdivieso
+Violeta Semprum
+Daniel Perez
+Salomon Trujillo
+Cesar
+
 # 🏦 Deep Retention: Sistema de Retención Selectiva de Clientes
 
 Motor predictivo basado en **redes neuronales** que estima la probabilidad de fuga de cada cliente bancario y decide, con una **regla financiera**, si vale la pena gastar dinero en retenerlo.
 
-📄 **Informe ejecutivo (PDF):** [Informe_Ejecutivo_Deep_Retention.pdf](docs/Informe_Ejecutivo_Deep_Retention.pdf) <!-- ← colocar aquí el PDF -->
+**Informe ejecutivo (PDF):** [Informe_Ejecutivo_Deep_Retention.pdf](docs/Informe_Ejecutivo_Deep_Retention.pdf) <!-- ← colocar aquí el PDF -->
 
 ---
 
@@ -16,12 +24,12 @@ Motor predictivo basado en **redes neuronales** que estima la probabilidad de fu
 
 4. Se elige el incentivo con mayor ganancia y **solo se ejecuta si la ganancia es mayor a 0**. Los clientes deficitarios quedan como **"Salida Permitida"**.
 
-| Segmento | Decisión | Incentivo |
-|---|---|---|
-| A: Alto Valor | Retención Prioritaria | Gestor VIP y Tarifa Plana / Exoneración |
-| B: Medio | Retención Automatizada | Exoneración de comisiones / Bonificación |
-| C: No Rentable | Salida Permitida | Sin intervención |
-| D: Estable | Sin Acción Requerida | Mantenimiento ordinario |
+| Segmento       | Decisión               | Incentivo                                |
+| -------------- | ---------------------- | ---------------------------------------- |
+| A: Alto Valor  | Retención Prioritaria  | Gestor VIP y Tarifa Plana / Exoneración  |
+| B: Medio       | Retención Automatizada | Exoneración de comisiones / Bonificación |
+| C: No Rentable | Salida Permitida       | Sin intervención                         |
+| D: Estable     | Sin Acción Requerida   | Mantenimiento ordinario                  |
 
 ## Estructura del repositorio
 
@@ -68,13 +76,13 @@ streamlit run app/app.py
 
 ## La aplicación
 
-| Pestaña | Para qué sirve |
-|---|---|
-| 🔎 **Buscador** | Busca un cliente por ID o apellido: probabilidad de la red, margen, decisión, incentivo, cálculo de la fórmula y explicación SHAP |
-| ➕ **Cliente nuevo** | Formulario (con validación de datos) y carga masiva por CSV |
-| 📊 **Panel de cartera** | Capital en riesgo, capital rescatable, inversión, ROI, matriz de decisión y lista de clientes prioritarios |
-| 🎛️ **Simulador** | Cambia costos y efectividades en la barra lateral y compara contra los valores por defecto y contra la estrategia ingenua (p ≥ 0.5) |
-| 🧠 **Modelo** | Métricas técnicas, curvas y factores de abandono |
+| Pestaña              | Para qué sirve                                                                                                                      |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Buscador**         | Busca un cliente por ID o apellido: probabilidad de la red, margen, decisión, incentivo, cálculo de la fórmula y explicación SHAP   |
+| **Cliente nuevo**    | Formulario (con validación de datos) y carga masiva por CSV                                                                         |
+| **Panel de cartera** | Capital en riesgo, capital rescatable, inversión, ROI, matriz de decisión y lista de clientes prioritarios                          |
+| **Simulador**        | Cambia costos y efectividades en la barra lateral y compara contra los valores por defecto y contra la estrategia ingenua (p ≥ 0.5) |
+| **Modelo**           | Métricas técnicas, curvas y factores de abandono                                                                                    |
 
 ## Modelo
 
@@ -88,9 +96,9 @@ streamlit run app/app.py
 
 ### Resultados (conjunto de prueba, 1500 clientes)
 
-| ROC-AUC | PR-AUC | Brier | ECE |
-|---|---|---|---|
-| 0.851 | 0.685 | 0.106 | 0.019 |
+| ROC-AUC | PR-AUC | Brier | ECE   |
+| ------- | ------ | ----- | ----- |
+| 0.851   | 0.685  | 0.106 | 0.019 |
 
 **Factores principales de abandono (SHAP):** edad, número de productos, si es miembro activo y país (Alemania).
 
@@ -98,12 +106,12 @@ streamlit run app/app.py
 
 El dataset no trae comisiones ni volumen transaccional, así que el margen se **estima** con estos supuestos, todos ajustables en la app:
 
-| Parámetro | Valor por defecto |
-|---|---|
-| Spread neto sobre saldo | 1.5 % anual |
-| Comisión por producto | $60 al año |
-| Ingreso por tarjeta de crédito | $30 al año |
-| Costo operativo por cuenta | $120 al año |
-| Gestor VIP y Tarifa Plana | $250, efectividad 45 %, solo nivel Patrimonial (saldo ≥ $120k) |
-| Exoneración de comisiones | $80, efectividad 35 %, niveles Patrimonial y Medio (saldo ≥ $50k) |
-| Bonificación transaccional | $25, efectividad 25 %, todos los niveles |
+| Parámetro                      | Valor por defecto                                                 |
+| ------------------------------ | ----------------------------------------------------------------- |
+| Spread neto sobre saldo        | 1.5 % anual                                                       |
+| Comisión por producto          | $60 al año                                                        |
+| Ingreso por tarjeta de crédito | $30 al año                                                        |
+| Costo operativo por cuenta     | $120 al año                                                       |
+| Gestor VIP y Tarifa Plana      | $250, efectividad 45 %, solo nivel Patrimonial (saldo ≥ $120k)    |
+| Exoneración de comisiones      | $80, efectividad 35 %, niveles Patrimonial y Medio (saldo ≥ $50k) |
+| Bonificación transaccional     | $25, efectividad 25 %, todos los niveles                          |
