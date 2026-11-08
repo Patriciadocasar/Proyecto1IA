@@ -1,0 +1,76 @@
+{
+  "roc_auc": 0.850888429073472,
+  "pr_auc": 0.6846245961682266,
+  "brier_sin_calibrar": 0.14718247950077057,
+  "brier_calibrado": 0.10601625591516495,
+  "ece_sin_calibrar": 0.15812205710013708,
+  "ece_calibrado": 0.018770933186014496,
+  "tasa_fuga_real_test": 0.204,
+  "prob_media_predicha_test": 0.20999567210674286,
+  "mejor_epoca": 28,
+  "epocas_entrenadas": 43,
+  "class_weight": {
+    "0": 0.6279153211338356,
+    "1": 2.4544179523141656
+  },
+  "n_train": 7000,
+  "n_val": 1500,
+  "n_test": 1500,
+  "variables_excluidas": [
+    "RowNumber",
+    "Surname",
+    "Complain"
+  ],
+  "reporte_umbral_05": {
+    "0": {
+      "precision": 0.9233753637245393,
+      "recall": 0.7973199329983249,
+      "f1-score": 0.8557303370786516,
+      "support": 1194.0
+    },
+    "1": {
+      "precision": 0.4840085287846482,
+      "recall": 0.7418300653594772,
+      "f1-score": 0.5858064516129032,
+      "support": 306.0
+    },
+    "accuracy": 0.786,
+    "macro avg": {
+      "precision": 0.7036919462545937,
+      "recall": 0.769574999178901,
+      "f1-score": 0.7207683943457774,
+      "support": 1500.0
+    },
+    "weighted avg": {
+      "precision": 0.8337445293968015,
+      "recall": 0.786,
+      "f1-score": 0.800665864443639,
+      "support": 1500.0
+    }
+  },
+  "matriz_confusion_umbral_05": [
+    [
+      952,
+      242
+    ],
+    [
+      79,
+      227
+    ]
+  ],
+  "factores_shap": {
+    "Age": 0.09424862442156773,
+    "NumOfProducts": 0.0919888572327538,
+    "IsActiveMember": 0.04924622535843227,
+    "Geography": 0.04106642038362551,
+    "Balance": 0.029678525592277585,
+    "Gender": 0.02801543512701901,
+    "Card Type": 0.027585655578035224,
+    "Point Earned": 0.010770035703339453,
+    "HasCrCard": 0.01005105792334871,
+    "Tenure": 0.00975255508609771,
+    "Satisfaction Score": 0.008966226653744526,
+    "CreditScore": 0.008951304245374922,
+    "EstimatedSalary": 0.008391423017316992
+  }
+}
