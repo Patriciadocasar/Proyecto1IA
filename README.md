@@ -4,7 +4,7 @@ Andres Valdivieso
 Violeta Semprum
 Daniel Perez
 Salomon Trujillo
-Cesar
+Cesar Reyes
 
 # 🏦 Deep Retention: Sistema de Retención Selectiva de Clientes
 
@@ -58,7 +58,7 @@ deep-retention/
 
 ## Instalación y ejecución
 
-Requiere Python 3.10 o superior.
+Requiere Python 3.12.
 
 ```bash
 git clone https://github.com/<usuario>/deep-retention.git
