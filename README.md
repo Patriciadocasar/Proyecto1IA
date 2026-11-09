@@ -63,8 +63,14 @@ Requiere Python 3.12.
 ```bash
 git clone https://github.com/<usuario>/deep-retention.git
 cd deep-retention
-python -m venv .venv
-# Windows: .venv\Scripts\activate   |   Mac/Linux: source .venv/bin/activate
+# Windows (selecciona explícitamente Python 3.12):
+py -3.12 -m venv .venv
+.venv\Scripts\activate
+# Mac/Linux:
+# python3.12 -m venv .venv
+# source .venv/bin/activate
+python --version  # debe mostrar Python 3.12.x
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 
 # (Opcional) reentrenar la red. Los pesos ya vienen en models/
@@ -73,6 +79,11 @@ python -m src.train
 # Lanzar la aplicación
 streamlit run app/app.py
 ```
+
+Si `pip` muestra `Could not find a version that satisfies the requirement
+scikit-learn>=1.5`, está usando otro intérprete de Python. El proyecto requiere
+Python 3.12; comprueba el intérprete activo con `python --version` y recrea el
+entorno virtual con el comando anterior.
 
 ## La aplicación
 
