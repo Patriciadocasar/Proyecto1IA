@@ -205,6 +205,11 @@ def main():
     ev.to_csv(config.REPORTS_DIR / "cartera_puntuada.csv", index=False)
     resumen = resumen_cartera(ev)
     resumen["estrategia_ingenua_p05"] = estrategia_ingenua(ev, params)
+    # La cartera completa incluye los 7000 clientes con los que se entrenó la
+    # red (sus probabilidades son algo optimistas). Como control, el mismo
+    # resumen solo con el conjunto de prueba, que la red nunca vio:
+    ev_te = evaluar_cartera(df_test, p_te, params)
+    resumen["solo_conjunto_prueba"] = resumen_cartera(ev_te)
     with open(config.REPORTS_DIR / "resumen_financiero.json", "w", encoding="utf-8") as fh:
         json.dump(resumen, fh, indent=2, ensure_ascii=False)
     matriz_decision(ev).to_csv(config.REPORTS_DIR / "matriz_decision.csv", index=False)

@@ -23,6 +23,7 @@ Motor predictivo basado en **redes neuronales** que estima la probabilidad de fu
    **Ganancia Neta Esperada = P(fuga) × Efectividad del incentivo × Margen del cliente − Costo del incentivo**
 
 4. Se elige el incentivo con mayor ganancia y **solo se ejecuta si la ganancia es mayor a 0**. Los clientes deficitarios quedan como **"Salida Permitida"**.
+5. Los clientes con probabilidad de fuga menor a 0.30 son **"Estables"** y no reciben incentivo (segmento D de la matriz), aunque la fórmula dé positivo por tener margen alto.
 
 | Segmento       | Decisión               | Incentivo                                |
 | -------------- | ---------------------- | ---------------------------------------- |
@@ -34,7 +35,7 @@ Motor predictivo basado en **redes neuronales** que estima la probabilidad de fu
 ## Estructura del repositorio
 
 ```
-deep-retention/
+Proyecto1IA/
 ├── app/
 │   └── app.py              # Aplicación Streamlit (solo inferencia)
 ├── data/
@@ -61,8 +62,8 @@ deep-retention/
 Requiere Python 3.12.
 
 ```bash
-git clone https://github.com/<usuario>/deep-retention.git
-cd deep-retention
+git clone https://github.com/Patriciadocasar/Proyecto1IA.git
+cd Proyecto1IA
 # Windows (selecciona explícitamente Python 3.12):
 py -3.12 -m venv .venv
 .venv\Scripts\activate
@@ -112,6 +113,21 @@ entorno virtual con el comando anterior.
 | 0.851   | 0.685  | 0.106 | 0.019 |
 
 **Factores principales de abandono (SHAP):** edad, número de productos, si es miembro activo y país (Alemania).
+
+### Resultados financieros (parámetros por defecto)
+
+| Indicador | Cartera completa (10 000) | Solo prueba (1 500) |
+| --- | --- | --- |
+| Clientes a intervenir | 1 735 | 264 |
+| Capital en riesgo crítico (P ≥ 0.5) | $105.06 M | $15.94 M |
+| Capital rescatable estimado | $41.30 M | $6.54 M |
+| Inversión en campañas | $147 670 | $23 550 |
+| Ganancia neta esperada | $471 839 | $74 824 |
+| ROI | 320 % | 318 % |
+| Salida Permitida | 547 | 84 |
+
+La cartera completa incluye a los clientes con los que se entrenó la red; la columna de prueba sirve de control y da un ROI casi igual.
+La estrategia ingenua (incentivo más barato a todo cliente con P ≥ 0.5) tiene un ROI mayor (844 %) porque gasta poco, pero su ganancia neta es de solo $255 373 y 314 de esos clientes dan ganancia esperada negativa.
 
 ## Supuestos financieros
 

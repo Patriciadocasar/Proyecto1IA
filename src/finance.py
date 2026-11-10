@@ -19,6 +19,11 @@ Lógica financiera del sistema "Deep Retention".
 
    Para cada cliente se evalúan todas las acciones del catálogo a las que
    es elegible, se elige la de mayor ganancia, y SOLO se ejecuta si es > 0.
+
+3) Segmento D (Estable) de la matriz del informe: si P(fuga) < umbral_estable
+   (0.30) el cliente no recibe incentivo aunque la fórmula dé positivo. Con
+   margen alto, la bonificación de $25 sale "rentable" incluso con P(fuga)
+   de 0.05, pero es gasto en clientes que casi seguro se quedan.
 """
 from dataclasses import dataclass, field, asdict
 
@@ -110,8 +115,8 @@ def evaluar_cartera(df: pd.DataFrame, prob: np.ndarray,
     costo = np.array([p.catalogo[claves[i]].costo for i in mejor])
     efect = np.array([p.catalogo[claves[i]].efectividad for i in mejor])
 
-    retener = mejor_ganancia > 0
-    estable = (~retener) & (prob < p.umbral_estable)
+    estable = prob < p.umbral_estable
+    retener = (~estable) & (mejor_ganancia > 0)
     salida = (~retener) & (~estable)
 
     segmento = np.select(
@@ -123,11 +128,11 @@ def evaluar_cartera(df: pd.DataFrame, prob: np.ndarray,
         ["Retención Prioritaria", "Retención Automatizada",
          "Salida Permitida", "Sin Acción Requerida"], default="")
     motivo = np.select(
-        [retener, salida & (margen <= 0), salida, estable],
-        ["Ganancia neta esperada positiva",
+        [estable, retener, salida & (margen <= 0), salida],
+        ["Riesgo bajo de fuga",
+         "Ganancia neta esperada positiva",
          "Cliente deficitario (margen ≤ 0)",
-         "El incentivo cuesta más de lo que rescata",
-         "Riesgo bajo de fuga"], default="")
+         "El incentivo cuesta más de lo que rescata"], default="")
 
     out["prob_fuga"] = prob
     out["margen_cliente"] = margen
@@ -173,12 +178,13 @@ def resumen_cartera(ev: pd.DataFrame, umbral_critico: float = 0.5) -> dict:
 
 def matriz_decision(ev: pd.DataFrame) -> pd.DataFrame:
     """Tabla de la sección 3 del informe (Matriz de Decisión Comercial)."""
-    g = ev.groupby("segmento").agg(
+    g = ev.groupby(["segmento", "decision", "incentivo"]).agg(
         clientes=("prob_fuga", "size"),
         prob_media=("prob_fuga", "mean"),
         saldo_medio=("Balance", "mean"),
         costo_total=("costo_incentivo", "sum"),
         ganancia_neta=("ganancia_neta_esperada", "sum"),
+        capital_rescatable=("balance_rescatado", "sum"),
     ).reset_index()
     return g
 
@@ -188,7 +194,7 @@ def estrategia_ingenua(ev: pd.DataFrame, p: ParametrosFinancieros,
     """Comparación: dar la acción más barata elegible a TODO cliente con
     prob ≥ 0.5, sin mirar rentabilidad (lo que hace hoy el banco)."""
     sel = ev[ev["prob_fuga"] >= umbral]
-    total_costo, total_gan = 0.0, 0.0
+    total_costo, total_gan, perdida, n_perdida = 0.0, 0.0, 0.0, 0
     for nivel, grupo in sel.groupby("nivel_patrimonial"):
         acciones = [a for a in p.catalogo.values() if nivel in a.niveles]
         a = min(acciones, key=lambda x: x.costo)
@@ -196,6 +202,14 @@ def estrategia_ingenua(ev: pd.DataFrame, p: ParametrosFinancieros,
                                    grupo["margen_cliente"], a.costo)
         total_costo += a.costo * len(grupo)
         total_gan += float(g.sum())
+        perdida += float(g[g < 0].sum())
+        n_perdida += int((g < 0).sum())
+    # Nota: el ROI de esta estrategia puede salir MAYOR que el del sistema,
+    # porque solo gasta en pocos clientes con P(fuga) muy alta. El criterio
+    # de negocio es la ganancia neta total, no el ROI: el sistema invierte en
+    # más clientes mientras cada peso adicional siga dejando ganancia.
     return {"clientes": int(len(sel)), "inversion": total_costo,
             "ganancia_neta": total_gan,
-            "roi": total_gan / total_costo if total_costo else 0.0}
+            "roi": total_gan / total_costo if total_costo else 0.0,
+            "clientes_con_perdida": n_perdida,
+            "perdida_en_clientes_no_rentables": perdida}

@@ -1,5 +1,8 @@
-segmento,clientes,prob_media,saldo_medio,costo_total,ganancia_neta
-A: Alto Valor / Alto Riesgo,2887,0.2643267975292344,144322.2486110149,150840.0,396035.5007281586
-B: Medio / Riesgo Moderado,2417,0.30764647304432224,97940.42889946215,94580.0,231299.10546076146
-C: No Rentable,547,0.5713764733108786,22.7773126142596,0.0,0.0
-D: Estable,4149,0.055583755580916466,26865.771342492168,0.0,0.0
+segmento,decision,incentivo,clientes,prob_media,saldo_medio,costo_total,ganancia_neta,capital_rescatable
+A: Alto Valor / Alto Riesgo,Retención Prioritaria,Bonificación transaccional,1,0.30601298809051514,121355.19,25.0,109.67079634936303,9284.06607804805
+A: Alto Valor / Alto Riesgo,Retención Prioritaria,Exoneración de comisiones,723,0.4818154883005477,141937.8703042877,57840.0,196357.94292246204,17149843.738856185
+A: Alto Valor / Alto Riesgo,Retención Prioritaria,Gestor VIP y Tarifa Plana,135,0.9114759096392879,149549.7417777778,33750.0,92881.54844879545,8208727.177718903
+B: Medio / Riesgo Moderado,Retención Automatizada,Bonificación transaccional,255,0.42512917553677276,78088.46956862745,6375.0,21368.030958993302,1856211.0568929426
+B: Medio / Riesgo Moderado,Retención Automatizada,Exoneración de comisiones,621,0.6328036064303055,103282.83549114333,49680.0,161121.6280928114,14078776.581002336
+C: No Rentable,Salida Permitida,Sin intervención,547,0.5713764733108786,22.7773126142596,0.0,0.0,0.0
+D: Estable,Sin Acción Requerida,Sin intervención,7718,0.09901828887463873,72280.84770018139,0.0,0.0,0.0
