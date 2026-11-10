@@ -99,7 +99,8 @@ def sidebar_params() -> ParametrosFinancieros:
         p.umbral_estable = st.slider("Prob. bajo la cual es 'Estable'", 0.0, 1.0,
                                      p.umbral_estable, 0.05)
     st.sidebar.info("Regla: se interviene solo si  \n"
-                    "**P(fuga) × Efectividad × Margen − Costo > 0**")
+                    "**P(fuga) × Efectividad × Margen − Costo > 0**  \n"
+                    f"y P(fuga) ≥ {p.umbral_estable:.2f} (debajo es 'Estable').")
     return p
 
 
@@ -152,7 +153,7 @@ def ficha_cliente(row_df: pd.DataFrame, prob: float, p: ParametrosFinancieros):
             "Incentivo": a.nombre, "Elegible": "✅" if eleg else "—",
             "Fórmula": f"{prob:.3f} × {a.efectividad:.2f} × {ev['margen_cliente']:,.0f} − {a.costo:,.0f}",
             "Ganancia neta esperada": g if eleg else np.nan,
-            "¿Se ejecuta?": "Sí" if (eleg and g > 0 and a.nombre == ev["incentivo"]) else "No",
+            "¿Se ejecuta?": "Sí" if a.nombre == ev["incentivo"] else "No",
         })
     st.dataframe(pd.DataFrame(filas).style.format(
         {"Ganancia neta esperada": "${:,.2f}"}, na_rep="no elegible"),
@@ -349,6 +350,7 @@ def vista_simulador(df, p):
         "Ganancia neta esperada": [r_base["ganancia_neta_total"],
                                    r_act["ganancia_neta_total"], ing["ganancia_neta"]],
         "ROI": [r_base["roi"], r_act["roi"], ing["roi"]],
+        "Clientes con ganancia negativa": [0, 0, ing["clientes_con_perdida"]],
     })
     k = st.columns(4)
     k[0].metric("Clientes a intervenir", f"{r_act['clientes_a_intervenir']:,}",
@@ -363,6 +365,10 @@ def vista_simulador(df, p):
     st.dataframe(comp.style.format({"Inversión": "${:,.0f}",
                                     "Ganancia neta esperada": "${:,.0f}", "ROI": "{:.0%}"}),
                  hide_index=True, width="stretch")
+    st.caption("La estrategia ingenua puede mostrar un ROI más alto porque gasta en "
+               "pocos clientes, pero deja de ganar dinero: el criterio de decisión es "
+               "la **ganancia neta total**, y además incluye clientes con ganancia "
+               "esperada negativa (gasto que no se recupera).")
     st.plotly_chart(px.bar(comp, x="Escenario", y="Ganancia neta esperada",
                            color="Escenario", text_auto=".3s",
                            title="Ganancia neta esperada por escenario"),

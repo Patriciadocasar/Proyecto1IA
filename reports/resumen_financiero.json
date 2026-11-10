@@ -3,17 +3,32 @@
   "clientes_riesgo_critico": 1211,
   "capital_riesgo_critico": 105058752.05000001,
   "balance_esperado_en_riesgo": 185121637.78948367,
-  "clientes_a_intervenir": 5304,
-  "capital_rescatable": 58378910.9896864,
-  "margen_rescatado": 872754.6061889201,
-  "inversion_total": 245420.0,
-  "ganancia_neta_total": 627334.6061889201,
-  "roi": 2.556167411738734,
+  "clientes_a_intervenir": 1735,
+  "capital_rescatable": 41302842.62054841,
+  "margen_rescatado": 619508.8212194117,
+  "inversion_total": 147670.0,
+  "ganancia_neta_total": 471838.82121941156,
+  "roi": 3.1952246307266985,
   "clientes_salida_permitida": 547,
-  "ingenua": {
+  "estrategia_ingenua_p05": {
     "clientes": 1211,
     "inversion": 30275.0,
     "ganancia_neta": 255372.5208080284,
-    "roi": 8.435095650141319
+    "roi": 8.435095650141319,
+    "clientes_con_perdida": 314,
+    "perdida_en_clientes_no_rentables": -8120.028396953137
+  },
+  "solo_conjunto_prueba": {
+    "clientes_analizados": 1500,
+    "clientes_riesgo_critico": 185,
+    "capital_riesgo_critico": 15935153.02,
+    "balance_esperado_en_riesgo": 28794699.697870843,
+    "clientes_a_intervenir": 264,
+    "capital_rescatable": 6543271.276758801,
+    "margen_rescatado": 98374.1106274976,
+    "inversion_total": 23550.0,
+    "ganancia_neta_total": 74824.1106274976,
+    "roi": 3.177244612632595,
+    "clientes_salida_permitida": 84
   }
 }
