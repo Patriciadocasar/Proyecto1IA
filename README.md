@@ -10,7 +10,7 @@ Cesar Reyes
 
 Motor predictivo basado en **redes neuronales** que estima la probabilidad de fuga de cada cliente bancario y decide, con una **regla financiera**, si vale la pena gastar dinero en retenerlo.
 
-**Informe ejecutivo (PDF):** [Informe_Ejecutivo_Deep_Retention.pdf](docs/Informe_Ejecutivo_Deep_Retention.pdf) <!-- ← colocar aquí el PDF -->
+**Informe ejecutivo (PDF):** [Informe_Ejecutivo_Deep_Retention.pdf](docs/Informe_Ejecutivo_Deep_Retention.pdf)
 
 ---
 
